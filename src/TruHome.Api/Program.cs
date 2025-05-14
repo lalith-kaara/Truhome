@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using NSwag;
 using NSwag.AspNetCore;
-using NSwag.Generation.Processors.Security;
 using Truhome.Api.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

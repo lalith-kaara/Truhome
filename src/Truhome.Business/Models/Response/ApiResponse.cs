@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace TruHome.Business.Models.Response;
+namespace Truhome.Business.Models.Response;
 
 public record ApiResponse(
     [property: JsonPropertyName("isSuccess")] bool IsSuccess = true,

@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace Truhome.Business.Models.Request;
+namespace Truhome.Business.Models.Common;
 
-public class DeduplicationRequest
+public class DeduplicationData
 {
     [JsonPropertyName("firstName")]
     public string? FirstName { get; init; }
@@ -14,16 +14,16 @@ public class DeduplicationRequest
     public string? LastName { get; init; }
 
     [JsonPropertyName("dateOfBirth")]
-    public string? DateOfBirth { get; init; }
+    public DateTime? DateOfBirth { get; init; }
 
     [JsonPropertyName("mobileNumber")]
-    public string? MobileNumber { get; init; }
+    public long? MobileNumber { get; init; }
 
     [JsonPropertyName("panNumber")]
     public string? PanNumber { get; init; }
 
     [JsonPropertyName("aadharNumber")]
-    public string? AadharNumber { get; init; }
+    public long? AadharNumber { get; init; }
 
     [JsonPropertyName("fatherFirstName")]
     public string? FatherFirstName { get; init; }

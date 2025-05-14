@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Truhome.Business.Exceptions;
-using TruHome.Business.Models.Response;
+using Truhome.Business.Models.Response;
 
 namespace Truhome.Api.Middlewares;
 

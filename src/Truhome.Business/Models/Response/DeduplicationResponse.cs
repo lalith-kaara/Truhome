@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Truhome.Business.Models.Common;
 
 namespace Truhome.Business.Models.Response;
 
@@ -12,11 +13,11 @@ public class DeduplicationResponse
 public class Match
 {
     [JsonPropertyName("existingId")]
-    public string? ExistingId { get; init; }
+    public int? ExistingId { get; init; }
 
     [JsonPropertyName("matchType")]
     public string? MatchType { get; init; }
 
     [JsonPropertyName("fields")]
-    public string[]? Fields { get; init; }
+    public DeduplicationData? Fields { get; init; }
 }
