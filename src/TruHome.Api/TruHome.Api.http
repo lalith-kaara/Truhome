@@ -1,0 +1,6 @@
+@TruHome.Api_HostAddress = http://localhost:5111
+
+GET {{TruHome.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
