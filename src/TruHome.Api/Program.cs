@@ -65,7 +65,7 @@ foreach (var description in tempProvider.ApiVersionDescriptions)
                 Kind = OpenApiParameterKind.Header,
                 Type = NJsonSchema.JsonObjectType.String,
                 IsRequired = false,
-                Description = "for api key authentication, used by Order API"
+                Description = "for api key authentication, used by Deduplication API"
             });
 
             return true;
