@@ -67,8 +67,8 @@ public class ExceptionMiddleware
 
         ApiResponse response = new ApiResponse(IsSuccess: false, Error: new
         {
-            ErrorCode = exception.ErrorCode,
-            ErrorMessage = exception.ErrorMessage
+            errorCode = exception.ErrorCode,
+            errorMessage = exception.ErrorMessage
         });
 
         HttpStatusCode httpStatusCode = HttpStatusCode.BadRequest;

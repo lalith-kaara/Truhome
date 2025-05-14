@@ -1,3 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace TruHome.Business.Models.Response;
 
-public record ApiResponse(bool IsSuccess = true, object? Result = null, object? Error = null);
+public record ApiResponse(
+    [property: JsonPropertyName("isSuccess")] bool IsSuccess = true,
+    [property: JsonPropertyName("result")] object? Result = null,
+    [property: JsonPropertyName("error")] object? Error = null
+);

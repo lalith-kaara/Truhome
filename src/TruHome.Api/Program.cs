@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using NSwag;
 using NSwag.AspNetCore;
+using NSwag.Generation.Processors.Security;
 using Truhome.Api.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,21 @@ foreach (var description in tempProvider.ApiVersionDescriptions)
     {
         settings.DocumentName = description.GroupName;
         settings.ApiGroupNames = new[] { description.GroupName };
+
+        settings.OperationProcessors.Add(new NSwag.Generation.Processors.OperationProcessor(opc =>
+        {
+            opc.OperationDescription.Operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "x-api-key",
+                Kind = OpenApiParameterKind.Header,
+                Type = NJsonSchema.JsonObjectType.String,
+                IsRequired = false,
+                Description = "for api key authentication, used by Order API"
+            });
+
+            return true;
+        }));
+
         settings.PostProcess = doc =>
         {
             doc.Info = new OpenApiInfo

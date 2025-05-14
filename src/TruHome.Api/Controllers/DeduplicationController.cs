@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Truhome.Api.Attributes;
 using Truhome.Business.Models.Request;
 using Truhome.Business.Models.Response;
 using TruHome.Business.Models.Response;
 
 namespace TruHome.Api.Controllers.V1
 {
+    [AuthorizeKey]
     [ApiVersion("2.0")]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
