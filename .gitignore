@@ -3,6 +3,10 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Ignore appsettings.json file
+
+appsettings.json
+
 # dotenv files
 .env
 
@@ -482,3 +486,4 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+/src/Truhome.Api/appsettings.json
