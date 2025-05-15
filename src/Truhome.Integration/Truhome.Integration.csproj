@@ -6,9 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Truhome.Domain\Truhome.Domain.csproj" />
-    <ProjectReference Include="..\Truhome.Integration\Truhome.Integration.csproj" />
-  </ItemGroup>
-
 </Project>

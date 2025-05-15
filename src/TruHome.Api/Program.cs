@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using NSwag;
 using NSwag.AspNetCore;
+using Truhome.Api.Extensions;
 using Truhome.Api.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -42,8 +43,12 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddResponseCompression();
 
-builder.Services.AddHealthChecks();
-// builder.Services.AddHealthChecks().AddAzureBlobStorage(builder.Configuration["StorageConnectionString"]!, name: "azure-blob-storage", failureStatus: HealthStatus.Unhealthy, tags: new[] { "storage", "critical" })
+builder.Services.AddHealthChecks()
+    .AddNpgSql(
+        builder.Configuration["DbConnectionString"]!,
+        name: "postgresql",
+        failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+        tags: new[] { "db", "sql", "postgresql" });
 
 builder.Services.AddOpenApi();
 
@@ -64,7 +69,21 @@ foreach (var description in tempProvider.ApiVersionDescriptions)
                 Kind = OpenApiParameterKind.Header,
                 Type = NJsonSchema.JsonObjectType.String,
                 IsRequired = false,
-                Description = "for api key authentication, used by Deduplication API"
+                Description = "API key used for authenticating requests. Required for accessing protected endpoints such as the Deduplication API."
+            });
+
+            return true;
+        }));
+
+        settings.OperationProcessors.Add(new NSwag.Generation.Processors.OperationProcessor(opc =>
+        {
+            opc.OperationDescription.Operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "x-origin-system",
+                Kind = OpenApiParameterKind.Header,
+                Type = NJsonSchema.JsonObjectType.String,
+                IsRequired = false,
+                Description = "Identifier for the source system calling the API."
             });
 
             return true;
@@ -82,6 +101,7 @@ foreach (var description in tempProvider.ApiVersionDescriptions)
     });
 }
 
+builder.Services.AddServices(builder.Configuration["DbConnectionString"]!);
 
 WebApplication app = builder.Build();
 
@@ -117,7 +137,10 @@ app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseResponseCompression();
+
+# if DEBUG
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+#endif
 
 app.MapHealthChecks("/health", new HealthCheckOptions
 {

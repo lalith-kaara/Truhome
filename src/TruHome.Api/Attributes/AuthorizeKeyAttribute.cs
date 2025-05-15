@@ -1,5 +1,4 @@
 
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Truhome.Business.Exceptions;
 
@@ -12,6 +11,9 @@ public class AuthorizeKeyAttribute : ActionFilterAttribute, IAuthorizationFilter
     {
         try
         {
+#if DEBUG
+            return;
+#endif
             IConfiguration configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
 
             var apiKey = context.HttpContext.Request.Headers["X-Api-Key"].ToString();
@@ -26,4 +28,5 @@ public class AuthorizeKeyAttribute : ActionFilterAttribute, IAuthorizationFilter
             throw TruhomeExceptions.TE401;
         }
     }
+
 }

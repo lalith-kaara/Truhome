@@ -14,16 +14,28 @@ public class DeduplicationData
     public string? LastName { get; init; }
 
     [JsonPropertyName("dateOfBirth")]
-    public DateTime? DateOfBirth { get; init; }
+    public DateOnly? DateOfBirth { get; init; }
 
     [JsonPropertyName("mobileNumber")]
     public long? MobileNumber { get; init; }
+
+    [JsonPropertyName("drivingLicenseNumber")]
+    public string? DrivingLicenseNumber { get; init; }
+
+    [JsonPropertyName("passportNumber")]
+    public string? PassportNumber { get; init; }
 
     [JsonPropertyName("panNumber")]
     public string? PanNumber { get; init; }
 
     [JsonPropertyName("aadharNumber")]
-    public long? AadharNumber { get; init; }
+    public string? AadharNumber { get; init; }
+
+    [JsonPropertyName("ckycNumber")]
+    public string? CkycNumber { get; init; }
+
+    [JsonPropertyName("voterId")]
+    public string? VoterId { get; init; }
 
     [JsonPropertyName("fatherFirstName")]
     public string? FatherFirstName { get; init; }

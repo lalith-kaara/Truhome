@@ -5,6 +5,9 @@ namespace Truhome.Business.Models.Response;
 
 public class DeduplicationResponse
 {
+    [JsonPropertyName("matchCount")]
+    public int MatchCount { get; init; }
+
     [JsonPropertyName("matches")]
     public List<Match> Matches { get; init; } = new List<Match>();
 }
@@ -13,7 +16,7 @@ public class DeduplicationResponse
 public class Match
 {
     [JsonPropertyName("existingId")]
-    public int? ExistingId { get; init; }
+    public string? ExistingId { get; init; }
 
     [JsonPropertyName("matchType")]
     public string? MatchType { get; init; }

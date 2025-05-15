@@ -7,7 +7,6 @@ namespace Truhome.Api.Middlewares;
 
 public class ExceptionMiddleware
 {
-
     private readonly RequestDelegate _next;
     private readonly ILogger<ExceptionMiddleware> _logger;
 
@@ -21,7 +20,7 @@ public class ExceptionMiddleware
     {
         try
         {
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
         }
         catch (TruhomeException vex)
         {
@@ -86,6 +85,9 @@ public class ExceptionMiddleware
                 break;
             case "TE410":
                 httpStatusCode = HttpStatusCode.Gone;
+                break;
+            case "TE400":
+                httpStatusCode = HttpStatusCode.BadRequest;
                 break;
         }
 
