@@ -4,7 +4,7 @@ using Truhome.Domain.Entities;
 
 namespace Truhome.Business.Mappers
 {
-    public static class DeduplicationMapper
+    public static class Mapper
     {
         public static Customerrequestlog ToCustomerRequestLog(this DeduplicationData request, string? correlationId, string? originSystem)
         {

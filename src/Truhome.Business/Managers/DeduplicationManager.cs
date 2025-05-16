@@ -20,15 +20,13 @@ public class DeduplicationManager : IDeduplicationManager
     public async Task<DeduplicationResponse> CheckDeduplicationAsync(DeduplicationData request, string? correlationId, string? originSystem, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(originSystem);
 
         await _dbContext.Customerrequestlogs.AddAsync(request.ToCustomerRequestLog(correlationId, originSystem), cancellationToken).ConfigureAwait(false);
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        List<Customer> customers = new List<Customer>();
-
-        List<Match> matches = new List<Match>();
-
-        var query = _dbContext.Customers.AsNoTracking().Where(c =>
+        var exactMatchQuery = _dbContext.Customers.AsNoTracking().Where(c =>
             // Rule 1
             (!string.IsNullOrWhiteSpace(request.FirstName) &&
              !string.IsNullOrWhiteSpace(request.LastName) &&
@@ -116,10 +114,15 @@ public class DeduplicationManager : IDeduplicationManager
              c.Ckycnumber.ToLower() == request.CkycNumber.ToLower())
         );
 
+        var exactlyMatchedCustomers = await exactMatchQuery.ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        var exactlyMatchedCustomers = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+        // var ambigousMatchedCustomers = await ambigousMatchQuery.ToListAsync(cancellationToken).ConfigureAwait(falase);
+
+        List<Match> matches = new List<Match>();
 
         matches.AddRange(exactlyMatchedCustomers.AsParallel().Select(x => x.ToMatch(MatchType.Exact.ToString())).ToList());
+
+        // matches.AddRange(ambigousMatchedCustomers.AsParallel().Select(x => x.ToMatch(MatchType.Ambiguous.ToString())).ToList());
 
         return new DeduplicationResponse
         {
