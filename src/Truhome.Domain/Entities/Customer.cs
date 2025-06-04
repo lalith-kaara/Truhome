@@ -25,7 +25,7 @@ public partial class Customer
 
     public string? Aadharnumber { get; set; }
 
-    public string? Ckycnumber { get; set; }
+    public string? Ckycid { get; set; }
 
     public string? Voterid { get; set; }
 
@@ -35,9 +35,27 @@ public partial class Customer
 
     public string? Fatherlastname { get; set; }
 
-    public string? Husbandfirstname { get; set; }
+    public string? Spousefirstname { get; set; }
 
-    public string? Husbandmiddlename { get; set; }
+    public string? Spousemiddlename { get; set; }
 
-    public string? Husbandlastname { get; set; }
+    public string? Spouselastname { get; set; }
+
+    public string? Mothermaidenname { get; set; }
+
+    public string? Emailid { get; set; }
+
+    public string? Gender { get; set; }
+
+    public long? Alternatemobilenumber { get; set; }
+
+    public string? Companyname { get; set; }
+
+    public string? Cin { get; set; }
+
+    public string? Sourcesystem { get; set; }
+
+    public short? Customertype { get; set; }
+
+    public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 }

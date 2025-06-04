@@ -103,7 +103,7 @@ CREATE TABLE Logs (
 
 -- scafolding command:
 
-dotnet ef dbcontext scaffold <connectionString> Npgsql.EntityFrameworkCore.PostgreSQL -o Entities -c TruhomeDbContext --context-dir Contexts --force
+dotnet ef dbcontext scaffold "Host=localhost;Port=5432;Database=truhome;Username=postgres;Password=Kaara;" Npgsql.EntityFrameworkCore.PostgreSQL -o Entities -c TruhomeDbContext --context-dir Contexts --force
 
 
 -- once scaffolding is done, remove connection string from context file and add it to appsettings.json

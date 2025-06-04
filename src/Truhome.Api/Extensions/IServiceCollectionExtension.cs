@@ -27,7 +27,7 @@ public static class IServiceCollectionExtension
 
     private static IServiceCollection AddManagers(this IServiceCollection services)
     {
-        services.AddScoped<IDeduplicationManager, DeduplicationManager>();
+        services.AddScoped<ICustomerManager, CustomerManager>();
 
         return services;
     }

@@ -9,7 +9,7 @@ public class DeduplicationResponse
     public int MatchCount { get; init; }
 
     [JsonPropertyName("matches")]
-    public List<Match> Matches { get; init; } = new List<Match>();
+    public List<Match>? Matches { get; init; } = new List<Match>();
 }
 
 
