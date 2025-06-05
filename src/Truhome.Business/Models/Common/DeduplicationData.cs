@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using Truhome.Business.Enums;
 
 namespace Truhome.Business.Models.Common;
 

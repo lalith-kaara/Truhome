@@ -75,7 +75,6 @@ namespace Truhome.Business.Mappers
 
             return new Match
             {
-                ExistingId = customer.Id.ToString(),
                 MatchType = matchType,
                 Fields = fields
             };

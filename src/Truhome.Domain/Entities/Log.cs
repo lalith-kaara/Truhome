@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Truhome.Domain.Entities;
+﻿namespace Truhome.Domain.Entities;
 
 public partial class Log
 {

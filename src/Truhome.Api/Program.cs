@@ -7,6 +7,7 @@ using NSwag;
 using NSwag.AspNetCore;
 using Truhome.Api.Extensions;
 using Truhome.Api.Middlewares;
+using Truhome.Domain.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -105,6 +106,9 @@ builder.Services.AddServices(builder.Configuration["DbConnectionString"]!);
 
 WebApplication app = builder.Build();
 
+DatabaseSetupService dbSetupService = app.Services.GetRequiredService<DatabaseSetupService>();
+await dbSetupService.CreateSchemaFromSqlFileAsync().ConfigureAwait(false);
+
 app.MapOpenApi();
 
 app.UseOpenApi();
@@ -138,7 +142,7 @@ app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseResponseCompression();
 
-# if DEBUG
+#if DEBUG
 app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 #endif
 

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Net;
+using Truhome.Business.Comparers;
+using Truhome.Business.Exceptions;
 using Truhome.Business.Interfaces;
 using Truhome.Business.Mappers;
 using Truhome.Business.Models.Common;
@@ -24,13 +25,14 @@ public class CustomerManager : ICustomerManager
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(originSystem);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.ExternalCustomerId);
 
         await _dbContext.Customeraudits.AddAsync(request.ToCustomerAudit(correlationId, originSystem), cancellationToken).ConfigureAwait(false);
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-        var exactlyMatchedCustomers = await FetchExactMatchCustomers(request, cancellationToken);
+        var exactlyMatchedCustomers = await FetchExactMatchCustomers(request, cancellationToken).ConfigureAwait(false);
 
-        var ambigousMatchedCustomers = await FetchAmbiguousMatchCustomer(request, cancellationToken);
+        var ambigousMatchedCustomers = await FetchAmbiguousMatchCustomer(request, cancellationToken).ConfigureAwait(false);
 
         List<Match> matches = new List<Match>();
 
@@ -38,11 +40,16 @@ public class CustomerManager : ICustomerManager
 
         matches.AddRange(ambigousMatchedCustomers.AsParallel().Select(x => x.ToMatch(MatchType.Ambiguous.ToString())).ToList());
 
+        matches = matches.Distinct(new MatchCustomerIdComparer()).ToList();
+
         if (!matches.Any())
         {
             Customer customer = await CreateCustomerAsync(request, cancellationToken);
 
-            await CreateCustomerMappingAsync(customer.Id, request.ExternalCustomerId, cancellationToken);
+            if (!string.IsNullOrWhiteSpace(request.ExternalCustomerId))
+            {
+                await CreateCustomerMappingAsync(customer.Id, request.ExternalCustomerId, cancellationToken);
+            }
 
             return new DeduplicationResponse
             {
@@ -738,14 +745,18 @@ public class CustomerManager : ICustomerManager
         ArgumentNullException.ThrowIfNullOrWhiteSpace(correlationId);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(originSystem);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(request.ExternalCustomerId);
-        if(request.CustomerId is 0) throw new Exception("CustomerId is required to update the customer");
+
+        if (request.CustomerId is 0)
+        {
+            throw TruhomeExceptions.TE404("Customer");
+        }
 
         await _dbContext.Customeraudits.AddAsync(request.ToCustomerAudit(correlationId, originSystem), cancellationToken).ConfigureAwait(false);
         await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         Customer? customer = await _dbContext.Customers.FindAsync(request.CustomerId, cancellationToken).ConfigureAwait(false);
 
-        if(customer == null)
+        if (customer == null)
         {
             throw new Exception($"Customer not found with CustomerId {request.CustomerId}");
         }
@@ -754,7 +765,7 @@ public class CustomerManager : ICustomerManager
         _dbContext.Entry(customer).State = EntityState.Modified;
         bool isSuccess = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false) > 0;
 
-        if(!await IsCustomerMappingExistsAsync(customer.Id, request.ExternalCustomerId))
+        if (!await IsCustomerMappingExistsAsync(customer.Id, request.ExternalCustomerId))
         {
             Customermapping? customermapping = await CreateCustomerMappingAsync(customer.Id, request.ExternalCustomerId, cancellationToken);
 

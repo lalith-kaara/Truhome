@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Truhome.Api.Attributes;
 using Truhome.Business.Interfaces;
 using Truhome.Business.Models.Common;
@@ -17,6 +16,23 @@ namespace Truhome.Api.Controllers
         public CustomerController(ICustomerManager manager)
         {
             _manager = manager;
+        }
+        
+        [RequireOriginSystem]
+        [AuthorizeKey]
+        [HttpPost]
+        [MapToApiVersion("1.0")]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse>> CheckDeduplicationV1([FromBody] DeduplicationData request, CancellationToken cancellationToken)
+        {
+            Request.Headers.TryGetValue("x-correlation-id", out var correlationId);
+            Request.Headers.TryGetValue("x-origin-system", out var originSystem);
+
+            var result = await _manager.CheckDeduplicationAsync(request, correlationId, originSystem, cancellationToken).ConfigureAwait(false);
+
+            return new ApiResponse(Result: result);
         }
 
         [RequireOriginSystem]

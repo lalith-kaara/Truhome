@@ -15,9 +15,6 @@ public class DeduplicationResponse
 
 public class Match
 {
-    [JsonPropertyName("existingId")]
-    public string? ExistingId { get; init; }
-
     [JsonPropertyName("matchType")]
     public string? MatchType { get; init; }
 

@@ -26,7 +26,7 @@ public class ExceptionMiddleware
         {
             await HandleInternalValidationExceptionAsync(context, vex).ConfigureAwait(false);
         }
-        catch(OperationCanceledException oex)
+        catch (OperationCanceledException oex)
         {
             await HandleOperationCancelledExceptionAsync(context, oex).ConfigureAwait(false);
         }
